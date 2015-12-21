@@ -1,8 +1,8 @@
 define(['Api'],function(API){
 	var User = function(){}
 	User.prototype = {
-		login:function(username,password,successCall,errorCall){
-			API.post('user.login',{username:username,password:password},function(json){
+		login:function(username,password,validate,successCall,errorCall){
+			API.post('User','login',{username:username,password:password,validate:validate},function(json){
 				successCall && successCall(json);
 			},function(json){
 				errorCall && errorCall(json);

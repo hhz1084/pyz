@@ -8,6 +8,7 @@ define(['jquery','model/User','Util'],function($,User,Util){
 			var self = this;
 			this.username = $('#username');
 			this.password = $('#password');
+			this.validate = $('#validate');
 			this.errorMsg = $('#errorMsg');
 			$('#login').on('click',function(){
 				self.submit();
@@ -19,13 +20,13 @@ define(['jquery','model/User','Util'],function($,User,Util){
 				this.username.focus();
 			}else if(this.password.val() == ''){
 				this.password.focus();
+			}else if(this.validate.val() == ''){
+				this.validate.focus();
 			}else{
-				User.login(this.username.val(),this.password.val(),function(json){
-					$.cookie('auth',encodeURI(json.result.auth),{path:'/',expires:3600});
-					$.cookie('username',self.username.val(),{path:'/',expires:3600});
-					Util.location('main/index.html');
+				User.login(this.username.val(),this.password.val(),this.validate.val(),function(json){
+					
 				},function(json){
-					self.errorMsg.html(json.error_message);
+					self.errorMsg.html(json.msg);
 					self.errorMsg.parent().css({display:'block'});
 				});
 			}

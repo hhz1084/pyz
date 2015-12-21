@@ -1,4 +1,4 @@
-var ROOT_PATH = '/fe';
+var ROOT_PATH = '';
 requirejs.config({
 	baseUrl:ROOT_PATH+"/dashboard/",
 	paths:{

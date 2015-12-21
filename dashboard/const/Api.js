@@ -1,19 +1,19 @@
 define(['jquery','Util','help/loadingHelp','cookie'],function($,Util,loadingHelp){
 	var constApi = {
-		url:"/lianjia/machine/api",
+		url:"/api/api.php?",
 		version:"1.0"
 	}
 	var Api = function(){}
 	Api.prototype = {
 		constructor : Api.prototype.constructor,
-		post:function(method,param,successCall,errorCall){
+		post:function(module,action,param,successCall,errorCall){
 			var self = this;
 			loadingHelp.ajaxStart();
 			$.ajax({
 				type:"post",
-				url:constApi.url,
-				data:this._makeParam(method,param),
-				processData:false,
+				url:constApi.url+'m='+module+'&a='+action,
+				data:param,
+				//processData:false,
 				complete:function(XHR,TS){
 					switch(XHR.status){
 						case 200:
@@ -28,32 +28,21 @@ define(['jquery','Util','help/loadingHelp','cookie'],function($,Util,loadingHelp
 			});
 		},
 		errorDo:function(errorCall,JSON){
-			switch(JSON.error_code){
-				case 40101:
-					$.removeCookie('auth',{path:'/'});
-					$.removeCookie('username',{path:'/'});
-					Util.location('../index.html');
-					break;
-				case 40901:
-					alert(JSON.error_message);
-					break;
-				default:
-					alert(JSON.error_message);
-					break;
-			}
-		},
-		_makeParam:function(method,param,auth){
-			var data = {
-				version:constApi.version,
-				method:method,
-				auth:auth ? auth : ($.cookie('auth') ? decodeURI($.cookie('auth')) : '')
-			}
-			if(param){
-				data.params = param;
+			if(errorCall){
+				errorCall(JSON);
 			}else{
-				data.params = {};
+				switch(JSON.code){
+					case 401:
+						Util.location('/index.html');
+						break;
+					case 40901:
+						alert(JSON.error_message);
+						break;
+					default:
+						alert(JSON.error_message);
+						break;
+				}
 			}
-			return JSON.stringify(data);
 		}
 	}
 	return new Api();
