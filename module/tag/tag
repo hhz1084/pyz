@@ -1,0 +1,196 @@
+<script type="text/template" id="tagMsgHeader">
+	<style type="text/css">
+		#tagNew .form-inline,#showService .form-inline{text-align: left;}
+		.box .box-div{float: left;height: 34px;border-radius: 4px;border:1px solid #ccc;margin-right: 10px;}
+		.box .box-div .data{display: inline-block;border-right: 1px solid #ccc;padding:6px 4px;}
+		.box .box-div .delete{padding:3px 4px;display:inline-block;font-style: normal;cursor: pointer;width:16px;height: 26px;}
+		.box .box-div .delete:hover{background:#eee;}
+	</style>
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			<h4 class="form-inline" style="text-align: left; float: left;">完整TAG簇：{{fullName}}&nbsp;&nbsp;<a href="javascript:;" id="change" value="{{sfullName}}">修改</a></h4>
+			<input type="button" class="btn btn-danger" id="deleteTag" value="删除当前tag" style="float: right;" />
+		</div>
+		<div class="panel-body form-inline">
+			<input type="button" class="btn btn-primary" data-toggle="modal" data-target="#tagNew" value="新建子TAG" />
+			<input type="button" class="btn btn-primary" data-toggle="modal" data-target="#showService" value="查看服务信息" /> &nbsp;&nbsp;&nbsp;&nbsp;
+			<label for="">增加服务器：</label>
+			<input type="text" class="form-control" id="server-one" placeholder="hostname|ip" />
+			<input type="button" class="btn btn-danger" id="add-server-one" value="增加" />
+		</div>
+		<div class="panel-heading">此tag对应服务器数量为：{{if machines}}{{machines.length}}{{else}}0{{/if}}</div>
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>hostname</th>
+					<th>ip</th>
+					<th>isvm</th>
+					<th>parentip</th>
+					<th>idrac</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{each machines}}
+				<tr>
+					<td>{{$value.id}}</td>
+					<td>{{$value.hostname}}</td>
+					<td>{{$value.ip}}</td>
+					<td>{{$value.isvm}}</td>
+					<td>{{$value.parentip}}</td>
+					<td>{{$value.idrac}}</td>
+					<td>
+						<input type="button" class="btn btn-primary lookMachineInfo" value="查看" title="服务器信息" data-id="{{$value.id}}" data-toggle="modal" data-target="#tagMachine" />
+						{{if $value.isenable == 1}}
+						<input type="button" value="disable" data-id="{{$value.id}}" class="btn btn-danger disableMachine" /> 
+						{{else}}
+						<input type="button" value="enable" data-id="{{$value.id}}" class="btn btn-success enableMachine" /> 
+						{{/if}}
+						<input type="button" class="btn btn-danger deleteServer" data-id="{{$value.id}}" value="删除" />
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+	<div class="modal fade" id="tagNew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">新建子TAG</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="">完整TAG簇：{{fullName}}</label>
+					</div>
+					<div class="form-group form-inline">
+						<label for="tagname">子TAG名称：</label>
+						<input type="text" class="form-control" id="tagname" />
+					</div>
+					<div class="form-group form-inline">
+						<label for="server">增加服务器：</label>
+						<input type="text" class="form-control" id="server" />
+						<input type="button" class="btn btn-danger" id="add-server" value="增加" />
+					</div>
+					<div class="form-group form-inline clearfix box" id="server-box">
+						
+					</div>
+					<div class="form-group form-inline">
+						<label for="">增加服务值：</label>
+						<select class="form-control servicetype" id="tagservicetype">
+						</select>
+						<input type="text" id="service-one"  class="form-control" />
+						<input type="button" class="btn btn-danger" id="add-service-one" value="增加" />
+					</div>
+					<div class="form-group form-inline clearfix box" id="service-box">
+						
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary" id="saveNewTag">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="showService" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">查看服务信息</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="">完整TAG簇：{{fullName}}</label>
+					</div>
+					<div class="form-group form-inline">
+						<label for="">增加服务值：</label>
+						<select class="form-control servicetype" id="sservicetype">
+						</select>
+						<input type="text" id="service" style="width: 418px;" class="form-control" />
+						<input type="button" class="btn btn-danger " id="add-service" value="增加" />
+					</div>
+					<table class="table table-hover table-condensed">
+						<thead>
+							<tr>
+								<th>id</th>
+								<th>服务类型</th>
+								<th>服务value</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{each service}}
+								{{each $value.value as $_v $i}}
+								<tr>
+									<td>{{$value.serviceid}}</td>
+									<td>{{$value.name}}</td>
+									<td>{{$_v}}</td>
+									<td><input type="button" serviceid="{{$value.serviceid}}" servicevalue="{{$_v}}" class="btn btn-danger deleteService" value="删除" /></td>
+								</tr>
+								{{/each}}
+							{{/each}}
+						</tbody>
+					</table>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="tagMachine" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">服务器信息</h4>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		require(['jquery','bootstrap']);
+	</script>
+</script>
+<script id="tagMachineInfoTemplate" type="text/template">
+	<div class="form-group">
+		<label>ID:</label><span>{{id}}</span>
+	</div>
+	<div class="form-group">
+		<label>hostname:</label><span>{{hostname}}</span>
+	</div>
+	<div class="form-group">
+		<label>ip:</label><span>{{ip}}</span>
+	</div>
+	<div class="form-group">
+		<label>isvm:</label><span>{{isvm}}</span>
+	</div>
+	<div class="form-group">
+		<label>parentip:</label><span>{{parentip}}</span>
+	</div>
+	<div class="form-group">
+		<label>is_enable:</label><span>{{if isenable==1}}true{{else}}false{{/if}}</span>
+	</div>
+	<div class="form-group">
+		<label>taglist :</label><br />
+		<span>
+			{{each taglist as $value $key}}
+			<a class="gotoTagInTag" href="javascript:;" data-id="{{$key}}">{{$value}}</a><br />
+			{{/each}}
+		</span>
+	</div>
+	<div class="form-group">
+		<label>param:</label><span>{{message}}</span>
+	</div>
+</script>
