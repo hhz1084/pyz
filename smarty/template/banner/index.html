@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Dashboard</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		
+	</head>
+
+	<body>
+		<div class="container header clearfix">
+			<header class="clearfix">
+				<h1><a href="index.html">Dashboard</a></h1>
+				<a href="/?m=user&a=logout" class="btn logout">退出</a>
+			</header>
+		</div>
+		<div class="body clearfix">
+			<div class="left">
+				<ul class="list-group">
+				  <li class="list-group-item"><a href="/?m=banner">图片轮播管理</a></li>
+				  <li class="list-group-item"><a href="/?m=notify">公告管理</a></li>
+				  <li class="list-group-item"><a href="/?m=order">订单管理</a></li>
+				  <li class="list-group-item"><a href="/?m=club">棋牌室管理</a></li>
+				  <li class="list-group-item"><a href="/?m=user&a=logout">退出</a></li>
+				</ul>
+			</div>
+			<div class="right">
+				<ul class="nav nav-tabs">
+				  <li class="active"><a href="/?m=banner">列表</a></li>
+				  <li><a href="/?m=banner&a=add">添加图片</a></li>
+				</ul>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+						<th>ID</th>
+						<th>名称/标识</th>
+						<th>图片</th>
+						<th>图片排序</th>
+						<th>状态</th>
+						<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{if empty($data)}}
+						<tr>
+							<td colspan="4" align="center">还没图片</td>
+						</tr>
+						{{else}}
+						{{foreach from=$data item=i}}
+						<tr>
+							<td>{{$i.id}}</td>
+							<td>{{$i.name}}</td>
+							<td><a href="{{$i.image}}" target="_blank"><img src="{{$i.image}}" style="width:80px;height:40px;" alt="" /></a></td>
+							<td>{{$i.weight}}</td>
+							<td>
+								{{if $i['status'] == 1}}
+								在线
+								{{else}}
+								非在线
+								{{/if}}
+							</td>
+							<td>
+								{{if $i['status']==1}}
+								<input type="button" class="btn btn-danger offline" data-id="{{$i.id}}" value="下线" />
+								{{else}}
+								<input type="button" class="btn btn-info online" data-id="{{$i.id}}" value="上线" />
+								{{/if}}
+								<a href="/?m=banner&a=edit&id={{$i.id}}" class="btn btn-info">编辑</a>
+								<input type="button" class="btn btn-danger delete" data-id="{{$i.id}}" value="删除" />
+							</td>
+						</tr>
+						{{/foreach}}
+						{{/if}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<script src="/js/jquery.js"></script>
+		<script>
+		$(function(){
+			$('.offline').click(function(){
+				op($(this).attr('data-id'),'status',0);
+			});
+			$('.online').click(function(){
+				op($(this).attr('data-id'),'status',1);
+			});
+			$('.delete').click(function(){
+				if(confirm('确认删除图片吗？')){
+					$.ajax({
+						url:'/?m=banner&a=delete',
+						data:{id:$(this).attr('data-id')},
+						dataType:'json',
+						type:'post',
+						complete:function(XHR,TS){
+							if(XHR.responseJSON.code == 200){
+								location.reload();
+							}else{
+								alert(XHR.responseJSON.msg);
+							}
+						}
+					});
+				}
+			});
+		});
+		function op(id,key,value){
+			$.ajax({
+				url:'/?m=banner&a=op',
+				data:{key:key,value:value,id:id},
+				dataType:'json',
+				type:'post',
+				complete:function(XHR,TS){
+					if(XHR.responseJSON.code == 200){
+						location.reload();
+					}else{
+						alert(XHR.responseJSON.msg);
+					}
+				}
+			});
+		}
+		</script>
+	</body>
+</html>

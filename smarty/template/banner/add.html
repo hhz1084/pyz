@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Dashboard</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<script src="/js/jquery.js"></script>
+	</head>
+
+	<body>
+		<div class="container header clearfix">
+			<header class="clearfix">
+				<h1><a href="index.html">Dashboard</a></h1>
+				<a href="/?m=user&a=logout" class="btn logout">退出</a>
+			</header>
+		</div>
+		<div class="body clearfix">
+			<div class="left">
+				<ul class="list-group">
+				  <li class="list-group-item"><a href="/?m=banner">图片轮播管理</a></li>
+				  <li class="list-group-item"><a href="/?m=notify">公告管理</a></li>
+				  <li class="list-group-item"><a href="/?m=order">订单管理</a></li>
+				  <li class="list-group-item"><a href="/?m=club">棋牌室管理</a></li>
+				  <li class="list-group-item"><a href="/?m=user&a=logout">退出</a></li>
+				</ul>
+			</div>
+			<div class="right">
+				<ul class="nav nav-tabs">
+				  <li><a href="/?m=banner">列表</a></li>
+				  <li class="active"><a href="/?m=banner&a=add">添加图片</a></li>
+				</ul>
+				<br />
+				<form action="/?m=banner&a=save" method="post" id="bannerform" enctype="multipart/form-data" class="form-inline">
+				  <div class="form-group ">
+				    <label for="name">名称(标识)：</label>
+				    <input type="text" class="form-control" name="name" id="name" placeholder="">
+				  </div><br /><br />
+				  <div class="form-group">
+				    <label for="weight">图片&nbsp;&nbsp;权重：</label>
+				    <input type="text" class="form-control" name="weight" id="weight" value="10" placeholder="">越小越靠前
+				  </div><br /><br />
+				  <div class="form-group">
+				    <label for="exampleInputFile">图片&nbsp;&nbsp;文件：</label>
+				    <input type="file" name="file" id="file" />
+				  </div><br /><br />
+				  <button type="submit" class="btn btn-primary">保存</button>
+				</form>
+			</div>
+		</div>
+		<script>
+		$(function(){
+			$('#bannerform').submit(function(){
+				if($('#name').val() == ''){
+					$('#name').focus();
+					return false;
+				}else if(!$('#file').val().match(/(jpg|jpeg|gif|png)$/i)){
+					alert('图片格式错误');
+					return false;
+				}
+			});
+		})
+		</script>
+	</body>
+</html>
