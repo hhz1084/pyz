@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Dashboard</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<style>
+		.dropdown{float:left;margin-left:20px;}
+		</style>
+	</head>
+
+	<body>
+		<div class="container header clearfix">
+			<header class="clearfix">
+				<h1><a href="index.html">Dashboard</a></h1>
+				<a href="/?m=user&a=logout" class="btn logout">退出</a>
+			</header>
+		</div>
+		<div class="body clearfix">
+			<div class="left">
+				<ul class="list-group">
+				  <li class="list-group-item"><a href="/?m=banner">图片轮播管理</a></li>
+				  <li class="list-group-item"><a href="/?m=notify">公告管理</a></li>
+				  <li class="list-group-item"><a href="/?m=order">订单管理</a></li>
+				  <li class="list-group-item"><a href="/?m=club">棋牌室管理</a></li>
+				  <li class="list-group-item"><a href="/?m=user&a=logout">退出</a></li>
+				</ul>
+			</div>
+			<div class="right">
+				<ul class="nav nav-tabs">
+				  <li class="active"><a href="/?m=club">棋牌室列表</a></li>
+				</ul>
+				<div class="panel panel-default" style="margin-top:10px;">
+				  <div class="panel-body">
+				    <div class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					    审核状态 - {{if $where['t'] == -1}}全部{{elseif $where['t']=='0'}}未审核{{elseif $where['t']=='1'}}审核通过{{elseif $where['t']=='-2'}}审核未通过{{/if}}
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					  	<li><a href="/?m=club&t=-1">全部</a></li>
+					    <li><a href="/?m=club&t=0">未审核</a></li>
+					    <li><a href="/?m=club&t=1">审核通过</a></li>
+					    <li><a href="/?m=club&t=-2">审核未通过</a></li>
+					  </ul>
+					</div>
+					
+				  </div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+						<th>棋牌室ID</th>
+						<th>所属者</th>
+						<th>名字</th>
+						<th>地址</th>
+						<th>手机</th>
+						<th>类型</th>
+						<th>状态</th>
+						<th>创建时间</th>
+						<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{if empty($data)}}
+						<tr>
+							<td colspan="9" align="center">还没订单</td>
+						</tr>
+						{{else}}
+						{{foreach from=$data item=i}}
+						<tr>
+							<td>{{$i.clubid}}</td>
+							<td>{{$i.ownerid}}</td>
+							<td>{{$i.name}}</td>
+							<td>{{$i.addr}}</td>
+							<td>{{$i.phone}}</td>
+							<td>{{if $i['playstyle'] == 1}}机器麻将{{elseif $i['playstyle'] == 2}}人工麻将{{elseif $i['playstyle'] == 3}}扑克{{else}}其他{{/if}}</td>
+							<td>
+								{{if $i['status'] == 0}}
+								未审核
+								{{elseif $i['status'] == 1}}
+								审核通过
+								{{elseif $i['status'] == -2}}
+								审核未通过
+								{{/if}}
+							</td>
+							<td>
+								{{$i.createdate}}
+							</td>
+							<td>
+								{{if $i['status'] == 0}}
+								<input type="button" class="btn btn-info ok" data-id="{{$i.clubid}}" value="批准" />
+								<input type="button" class="btn btn-danger no" data-id="{{$i.clubid}}" value="拒绝" />
+								{{/if}}
+							</td>
+						</tr>
+						{{/foreach}}
+						{{/if}}
+					</tbody>
+				</table>
+				<ul class="pagination">
+				{{$page}}
+				</ul>
+			</div>
+		</div>
+		<script src="/js/jquery.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		<script>
+		$(function(){
+			$('.ok').click(function(){
+				if(confirm('批准该棋牌室？')){
+					op($(this).attr('data-id'),1);
+				}
+			});
+			$('.no').click(function(){
+				if(confirm('拒绝该棋牌室？')){
+					op($(this).attr('data-id'),-2);
+				}
+			});
+			$('.delete').click(function(){
+				if(confirm('确认删除订单吗？')){
+					$.ajax({
+						url:'/?m=order&a=delete',
+						data:{id:$(this).attr('data-id')},
+						dataType:'json',
+						type:'post',
+						complete:function(XHR,TS){
+							if(XHR.responseJSON.code == 200){
+								location.reload();
+							}else{
+								alert(XHR.responseJSON.msg);
+							}
+						}
+					});
+				}
+			});
+		});
+		function op(id,value){
+			$.ajax({
+				url:'/?m=club&a=op',
+				data:{value:value,id:id},
+				dataType:'json',
+				type:'post',
+				complete:function(XHR,TS){
+					if(XHR.responseJSON.code == 200){
+						location.reload();
+					}else{
+						alert(XHR.responseJSON.msg);
+					}
+				}
+			});
+		}
+		</script>
+	</body>
+</html>

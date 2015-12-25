@@ -3,31 +3,67 @@ class Banner extends Controller
 {
     public function actionIndex()
     {
-        $sql = "select * from ha_banner";
+        $p = isset($_GET['p']) ? (intval($_GET['p'])>0 ? intval($_GET['p']):1) : 1;
+        $sql = "select * from ha_carousel order by id desc LIMIT ".($p-1)*self::PAGE_SIZE.','.self::PAGE_SIZE;
         $data = App::db()->getAll($sql);
         
+        $sql = "SELECT COUNT(1) FROM ha_carousel";
+        $count = App::db()->getOne($sql);
+        
+        $page = new Page($count,self::PAGE_SIZE);
+        $page->url = '/?m=banner&p=[page]';
         $this->tpl->assign('data',$data);
+        $this->tpl->assign('page',$page->show());
         $this->tpl->display('banner/index.html');
     }
     public function actionAdd()
     {
         $this->tpl->display('banner/add.html');
     }
+    public function actionEdit()
+    {
+        $id = isset($_GET['id']) ? intval($_GET['id']) : '';
+        if (empty($id)){
+            $this->location('/?m=banner');
+        }
+        $sql = "select * from ha_carousel where id={$id}";
+        $data = App::db()->getRow($sql);
+        if (empty($data)){
+            $this->location('/?m=banner');
+        }
+        $this->tpl->assign('data',$data);
+        $this->tpl->display('banner/edit.html');
+    }
     public function actionSave()
     {
         if ($this->isPost()){
-            $name = $_POST['name'];
-            $weight = intval($_POST['weight']);
-            $file = $this->saveFile($_FILES['file']);
-            if ($file){
-                $sql = "insert into ha_banner(name,weight,image) values ('$name','$weight','$file')";
-                if (App::db()->query($sql)){
-                    $this->location('/?m=banner');
-                }else{
-                    $this->back('添加失败');
-                }
+            $path = $_POST['path'];
+            $url = $_POST['url'];
+            if (empty($path) && is_uploaded_file($_FILES['file']['tmp_name'])){
+                $path = $this->saveFile($_FILES['file']);
+            }
+            $sql = "insert into ha_carousel(path,url,createdate) values ('$path','$url',now())";
+            if (App::db()->query($sql)){
+                $this->location('/?m=banner');
             }else{
-                $this->back('文件上传错误');
+                $this->back('添加失败');
+            }
+        }
+    }
+    public function actionEditsave()
+    {
+        if ($this->isPost()){
+            $id = $_POST['id'];
+            $path = $_POST['path'];
+            $url = $_POST['url'];
+            if (empty($path) && is_uploaded_file($_FILES['file']['tmp_name'])){
+                $path = $this->saveFile($_FILES['file']);
+            }
+            $sql = "update ha_carousel set path='$path',url='$url' where id=$id";
+            if (App::db()->query($sql)){
+                $this->location('/?m=banner');
+            }else{
+                $this->back('保存失败');
             }
         }
     }

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Dashboard</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+		<style>
+		.dropdown{float:left;margin-left:20px;}
+		</style>
+	</head>
+
+	<body>
+		<div class="container header clearfix">
+			<header class="clearfix">
+				<h1><a href="index.html">Dashboard</a></h1>
+				<a href="/?m=user&a=logout" class="btn logout">退出</a>
+			</header>
+		</div>
+		<div class="body clearfix">
+			<div class="left">
+				<ul class="list-group">
+				  <li class="list-group-item"><a href="/?m=banner">图片轮播管理</a></li>
+				  <li class="list-group-item"><a href="/?m=notify">公告管理</a></li>
+				  <li class="list-group-item"><a href="/?m=order">订单管理</a></li>
+				  <li class="list-group-item"><a href="/?m=club">棋牌室管理</a></li>
+				  <li class="list-group-item"><a href="/?m=user&a=logout">退出</a></li>
+				</ul>
+			</div>
+			<div class="right">
+				<ul class="nav nav-tabs">
+				  <li class="active"><a href="/?m=order">订单列表</a></li>
+				</ul>
+				<div class="panel panel-default" style="margin-top:10px;">
+				  <div class="panel-body">
+				    <div class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					    提交时间 - {{if $where['t'] == -1}}全部{{elseif $where['t']=='asc'}}从早到晚{{elseif $where['t']=='desc'}}从晚到早{{/if}}
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					  	<li><a href="/?m=order&t=-1&s={{$where.s}}&type={{$where.type}}">全部</a></li>
+					    <li><a href="/?m=order&t=asc&s={{$where.s}}&type={{$where.type}}">从早到晚</a></li>
+					    <li><a href="/?m=order&t=desc&s={{$where.s}}&type={{$where.type}}">从晚到早</a></li>
+					  </ul>
+					</div>
+					<div class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					    付款情况 - {{if $where['s'] == 1}}已付款{{elseif $where['s'] == -1}}全部{{elseif $where['s'] == 0}}未付款{{elseif $where['s'] == 2}}取消(未退款){{elseif $where['s'] == 3}}取消(已退款){{/if}}
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					  <li><a href="/?m=order&t={{$where.t}}&s=-1&type={{$where.type}}">已付款</a></li>
+					    <li><a href="/?m=order&t={{$where.t}}&s=1&type={{$where.type}}">已付款</a></li>
+					    <li><a href="/?m=order&t={{$where.t}}&s=0&type={{$where.type}}">未付款</a></li>
+					    <li><a href="/?m=order&t={{$where.t}}&s=2&type={{$where.type}}">取消(未退款)</a></li>
+					    <li><a href="/?m=order&t={{$where.t}}&s=3&type={{$where.type}}">取消(已退款)</a></li>
+					  </ul>
+					</div>
+					<div class="dropdown">
+					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					    支付方式-{{if $where['type'] == -1}}全部{{elseif $where['type']==0}}微信{{elseif $where['type'] == 1}}支付宝{{/if}}
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					  	<li><a href="/?m=order&t={{$where.t}}&s={{$where.s}}&type=-1">全部</a></li>
+					    <li><a href="/?m=order&t={{$where.t}}&s={{$where.s}}&type=0">微信</a></li>
+					    <li><a href="/?m=order&t={{$where.t}}&s={{$where.s}}&type=1">支付宝</a></li>
+					  </ul>
+					</div>
+				  </div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+						<th>订单ID</th>
+						<th>用户ID</th>
+						<th>棋牌室</th>
+						<th>牌桌</th>
+						<th>场次</th>
+						<th>金额</th>
+						<th>支付状态</th>
+						<th>支付方式</th>
+						<th>订单时间</th>
+						<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{if empty($data)}}
+						<tr>
+							<td colspan="10" align="center">还没订单</td>
+						</tr>
+						{{else}}
+						{{foreach from=$data item=i}}
+						<tr>
+							<td>{{$i.orderid}}</td>
+							<td>{{$i.userid}}</td>
+							<td>{{$i.name}}</td>
+							<td>{{$i.tablename}}</td>
+							<td>{{if $i['gametime'] == 1}}上午{{elseif $i['gametime']==2}}下午{{elseif $i['gametime']==3}}晚上{{/if}}</td>
+							<td>￥{{$i.amount}}元</td>
+							<td>
+								{{if $i['paystatus'] == 0}}
+								未付款
+								{{elseif $i['paystatus'] == 1}}
+								已付款
+								{{elseif $i['paystatus'] == 2}}
+								取消(未退款)
+								{{elseif $i['paystatus'] == 3}}
+								取消(已退款)
+								{{/if}}
+							</td>
+							<td>
+								{{if $i['paytype'] == '0'}}
+								微信
+								{{elseif $i['paytype'] == 1}}
+								支付宝
+								{{else}}
+								无
+								{{/if}}
+							</td>
+							<td>
+							{{$i.createdate}}
+							</td>
+							<td>
+								{{if $i['paystatus'] != 2}}
+								<input type="button" class="btn btn-info cancel1" data-id="{{$i.orderid}}" value="取消(未退款)"/>
+								{{/if}}
+								{{if $i['paystatus'] != 3}}
+								<input type="button" class="btn btn-info cancel2" data-id="{{$i.orderid}}" value="取消(已退款)"/>
+								{{/if}}
+								<input type="button" class="btn btn-danger delete" data-id="{{$i.orderid}}" value="删除" />
+							</td>
+						</tr>
+						{{/foreach}}
+						{{/if}}
+					</tbody>
+				</table>
+				<ul class="pagination">
+				{{$page}}
+				</ul>
+			</div>
+		</div>
+		<script src="/js/jquery.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+		<script>
+		$(function(){
+			$('.cancel1').click(function(){
+				if(confirm('确认取消订单吗？')){
+					op($(this).attr('data-id'),2);
+				}
+			});
+			$('.cancel2').click(function(){
+				if(confirm('确认取消订单吗？')){
+					op($(this).attr('data-id'),3);
+				}
+			});
+			$('.delete').click(function(){
+				if(confirm('确认删除订单吗？')){
+					$.ajax({
+						url:'/?m=order&a=delete',
+						data:{id:$(this).attr('data-id')},
+						dataType:'json',
+						type:'post',
+						complete:function(XHR,TS){
+							if(XHR.responseJSON.code == 200){
+								location.reload();
+							}else{
+								alert(XHR.responseJSON.msg);
+							}
+						}
+					});
+				}
+			});
+		});
+		function op(id,value){
+			$.ajax({
+				url:'/?m=order&a=op',
+				data:{value:value,id:id},
+				dataType:'json',
+				type:'post',
+				complete:function(XHR,TS){
+					if(XHR.responseJSON.code == 200){
+						location.reload();
+					}else{
+						alert(XHR.responseJSON.msg);
+					}
+				}
+			});
+		}
+		</script>
+	</body>
+</html>

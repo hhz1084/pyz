@@ -28,32 +28,32 @@
 			</div>
 			<div class="right">
 				<ul class="nav nav-tabs">
-				  <li><a href="/?m=banner">列表</a></li>
-				  <li class="active"><a href="/?m=banner&a=add">添加图片</a></li>
+				  <li><a href="/?m=notify">列表</a></li>
+				  <li class="active"><a href="/?m=notify&a=add">添加公告</a></li>
 				</ul>
 				<br />
-				<form action="/?m=banner&a=save" method="post" id="bannerform" enctype="multipart/form-data" class="form-inline">
-				  <div class="form-group">
-				    <label for="weight">图片&nbsp;&nbsp;地址：</label>
-				    <input type="text" class="form-control" name="path" value="" id="path" value="10" placeholder="图片外部链接地址(优先)" />
+				<form action="/?m=notify&a=save" method="post" id="notifyform" class="form-inline">
+				  <div class="form-group ">
+				    <label for="title">公告标题：</label>
+				    <input type="text" class="form-control" name="title" id="title" placeholder="公告标题">
 				  </div><br /><br />
 				  <div class="form-group">
-				    <label for="exampleInputFile">图片&nbsp;&nbsp;文件：</label>
-				    <input type="file" name="file" id="file" /><br />
+				    <label for="content">公告内容：</label>
+				    <textarea class="form-control" name="content" id="content" style="width:400px;height:200px;" placeholder="公告内容"></textarea>
 				  </div><br /><br />
-				  <div class="form-group">
-				    <label for="exampleInputFile">链&nbsp;&nbsp;&nbsp;&nbsp;接：</label>
-				    <input type="text" class="form-control" name="url" id="url" /><br />
-				  </div><br /><br />
+				  
 				  <button type="submit" class="btn btn-primary">保存</button>
 				</form>
 			</div>
 		</div>
 		<script>
 		$(function(){
-			$('#bannerform').submit(function(){
-				if($('#path').val() == '' && $('#file').val() == ''){
-					alert('外部图片和文件必须选一个')
+			$('#notifyform').submit(function(){
+				if($('#title').val() == ''){
+					$('#title').focus();
+					return false;
+				}else if($('#content').val() == ''){
+					$('#content').focus();
 					return false;
 				}
 			});

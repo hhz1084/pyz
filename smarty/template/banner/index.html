@@ -35,10 +35,8 @@
 					<thead>
 						<tr>
 						<th>ID</th>
-						<th>名称/标识</th>
 						<th>图片</th>
-						<th>图片排序</th>
-						<th>状态</th>
+						<th>链接</th>
 						<th>操作</th>
 						</tr>
 					</thead>
@@ -51,22 +49,9 @@
 						{{foreach from=$data item=i}}
 						<tr>
 							<td>{{$i.id}}</td>
-							<td>{{$i.name}}</td>
-							<td><a href="{{$i.image}}" target="_blank"><img src="{{$i.image}}" style="width:80px;height:40px;" alt="" /></a></td>
-							<td>{{$i.weight}}</td>
+							<td><a href="{{$i.path}}" target="_blank"><img src="{{$i.path}}" style="width:80px;height:40px;" alt="" /></a></td>
+							<td>{{$i.url}}</td>
 							<td>
-								{{if $i['status'] == 1}}
-								在线
-								{{else}}
-								非在线
-								{{/if}}
-							</td>
-							<td>
-								{{if $i['status']==1}}
-								<input type="button" class="btn btn-danger offline" data-id="{{$i.id}}" value="下线" />
-								{{else}}
-								<input type="button" class="btn btn-info online" data-id="{{$i.id}}" value="上线" />
-								{{/if}}
 								<a href="/?m=banner&a=edit&id={{$i.id}}" class="btn btn-info">编辑</a>
 								<input type="button" class="btn btn-danger delete" data-id="{{$i.id}}" value="删除" />
 							</td>
@@ -75,6 +60,9 @@
 						{{/if}}
 					</tbody>
 				</table>
+				<ul class="pagination">
+				{{$page}}
+				</ul>
 			</div>
 		</div>
 		<script src="/js/jquery.js"></script>

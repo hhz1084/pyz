@@ -29,17 +29,20 @@
 			<div class="right">
 				<ul class="nav nav-tabs">
 				  <li><a href="/?m=banner">列表</a></li>
-				  <li class="active"><a href="/?m=banner&a=add">添加图片</a></li>
+				  <li><a href="/?m=banner&a=add">添加图片</a></li>
+				  <li class="active"><a href="/?m=banner&a=edit&id={{$data.id}}">编辑图片</a></li>
 				</ul>
 				<br />
-				<form action="/?m=banner&a=save" method="post" id="bannerform" enctype="multipart/form-data" class="form-inline">
+				<form action="/?m=banner&a=editsave" method="post" id="bannerform" enctype="multipart/form-data" class="form-inline">
+				  <input type="hidden" value="{{$data.id}}" name="id" />
 				  <div class="form-group">
 				    <label for="weight">图片&nbsp;&nbsp;地址：</label>
-				    <input type="text" class="form-control" name="path" value="" id="path" value="10" placeholder="图片外部链接地址(优先)" />
+				    <input type="text" class="form-control" name="path" value="{{$data.path}}" id="path" value="10" placeholder="图片外部链接地址(优先)" />
 				  </div><br /><br />
 				  <div class="form-group">
 				    <label for="exampleInputFile">图片&nbsp;&nbsp;文件：</label>
 				    <input type="file" name="file" id="file" /><br />
+				    <img src="{{$data.path}}" alt="" style="width:200px;height:120px;"/>
 				  </div><br /><br />
 				  <div class="form-group">
 				    <label for="exampleInputFile">链&nbsp;&nbsp;&nbsp;&nbsp;接：</label>
@@ -49,15 +52,5 @@
 				</form>
 			</div>
 		</div>
-		<script>
-		$(function(){
-			$('#bannerform').submit(function(){
-				if($('#path').val() == '' && $('#file').val() == ''){
-					alert('外部图片和文件必须选一个')
-					return false;
-				}
-			});
-		})
-		</script>
 	</body>
 </html>
