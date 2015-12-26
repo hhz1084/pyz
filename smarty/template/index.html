@@ -35,7 +35,7 @@
 			  <div class="form-group">
 			    <label for="password">验证码：</label>
 			    <input type="text" class="form-control" name="validate" id="validate" placeholder="">
-			    <img src="/?m=validate&a=get" alt="" />
+			    <img src="/?m=validate&a=get" onclick="this.src='/?m=validate&a=get&_='+Math.random()" alt="验证码" title="点击刷新" style="cursor:pointer;" />
 			  </div>&nbsp;&nbsp;&nbsp;&nbsp;
 			  <div class="form-group">
 			  	<button type="submit" class="btn btn-danger" id="login">登录</button>
