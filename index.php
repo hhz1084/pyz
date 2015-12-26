@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('PRC');
 define('APP_PATH', str_replace('\\', '/', __DIR__.'/'));
 include_once './init/init.php';
 try {

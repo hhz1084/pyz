@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<title>Dashboard</title>
+		<title>乐吧棋牌室后台管理</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="/css/style.css" />
 		<script src="/js/jquery.js"></script>
@@ -12,7 +12,7 @@
 	<body>
 		<div class="container header clearfix">
 			<header class="clearfix">
-				<h1><a href="index.html">Dashboard</a></h1>
+				<h1><a href="/">乐吧棋牌室后台管理</a></h1>
 				<a href="/?m=user&a=logout" class="btn logout">退出</a>
 			</header>
 		</div>
@@ -36,17 +36,13 @@
 				<form action="/?m=banner&a=editsave" method="post" id="bannerform" enctype="multipart/form-data" class="form-inline">
 				  <input type="hidden" value="{{$data.id}}" name="id" />
 				  <div class="form-group">
-				    <label for="weight">图片&nbsp;&nbsp;地址：</label>
-				    <input type="text" class="form-control" name="path" value="{{$data.path}}" id="path" value="10" placeholder="图片外部链接地址(优先)" />
-				  </div><br /><br />
-				  <div class="form-group">
 				    <label for="exampleInputFile">图片&nbsp;&nbsp;文件：</label>
 				    <input type="file" name="file" id="file" /><br />
 				    <img src="{{$data.path}}" alt="" style="width:200px;height:120px;"/>
 				  </div><br /><br />
 				  <div class="form-group">
 				    <label for="exampleInputFile">链&nbsp;&nbsp;&nbsp;&nbsp;接：</label>
-				    <input type="text" class="form-control" name="url" id="url" /><br />
+				    <input type="text" class="form-control" name="url" value="{{$data.url}}" id="url" /><br />
 				  </div><br /><br />
 				  <button type="submit" class="btn btn-primary">保存</button>
 				</form>

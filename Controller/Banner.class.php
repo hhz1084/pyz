@@ -37,10 +37,11 @@ class Banner extends Controller
     public function actionSave()
     {
         if ($this->isPost()){
-            $path = $_POST['path'];
             $url = $_POST['url'];
-            if (empty($path) && is_uploaded_file($_FILES['file']['tmp_name'])){
+            if (empty(is_uploaded_file($_FILES['file']['tmp_name']))){
                 $path = $this->saveFile($_FILES['file']);
+            }else{
+                $this->back('图片文件不能为空');
             }
             $sql = "insert into ha_carousel(path,url,createdate) values ('$path','$url',now())";
             if (App::db()->query($sql)){
@@ -53,11 +54,15 @@ class Banner extends Controller
     public function actionEditsave()
     {
         if ($this->isPost()){
+            
             $id = $_POST['id'];
-            $path = $_POST['path'];
+            $sql = "select * from ha_carousel where id={$id}";
+            $data = App::db()->getRow($sql);
+            $path = $data['path'];
             $url = $_POST['url'];
-            if (empty($path) && is_uploaded_file($_FILES['file']['tmp_name'])){
+            if (is_uploaded_file($_FILES['file']['tmp_name'])){
                 $path = $this->saveFile($_FILES['file']);
+                @unlink(IMAGE_PATH.ltrim($data['path']));
             }
             $sql = "update ha_carousel set path='$path',url='$url' where id=$id";
             if (App::db()->query($sql)){
@@ -69,13 +74,13 @@ class Banner extends Controller
     }
     public function saveFile($file)
     {
-        $path = APP_PATH.'img/banner/';
+        $path = APP_PATH.ltrim(IMAGE_PATH,'/');
         if (is_uploaded_file($file['tmp_name'])){
-            $filename = uniqid('B_');
+            $filename = uniqid(chr(mt_rand(65, 90)).'_');
             $type = explode('.', $file['name']);
             $type = array_pop($type);
             if(move_uploaded_file($file['tmp_name'], $path.$filename.'.'.$type)){
-                return '/img/banner/'.$filename.'.'.$type;
+                return IMAGE_PATH.$filename.'.'.$type;
             }
         }
         return false;

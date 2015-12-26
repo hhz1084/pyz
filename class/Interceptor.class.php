@@ -6,11 +6,15 @@ class Interceptor{
         'Index' =>array('index')
     );
     public static function init(){
-        if (!self::isLogin()){
+        if (!self::_isLogin()){
             header('location:/');
         }
     }
-    private static function isLogin(){
+    public static function isLogin()
+    {
+        return isset($_SESSION['is_login']) && $_SESSION['is_login'] == 1;
+    }
+    private static function _isLogin(){
         return self::checkController() || (isset($_SESSION['is_login']) && $_SESSION['is_login'] == 1);
     }
     private static function checkController()

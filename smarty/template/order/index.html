@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8" />
-		<title>Dashboard</title>
+		<title>乐吧棋牌室后台管理</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="/css/style.css" />
 		<style>
@@ -14,7 +14,7 @@
 	<body>
 		<div class="container header clearfix">
 			<header class="clearfix">
-				<h1><a href="index.html">Dashboard</a></h1>
+				<h1><a href="/">乐吧棋牌室后台管理</a></h1>
 				<a href="/?m=user&a=logout" class="btn logout">退出</a>
 			</header>
 		</div>
@@ -51,7 +51,7 @@
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-					  <li><a href="/?m=order&t={{$where.t}}&s=-1&type={{$where.type}}">已付款</a></li>
+					  <li><a href="/?m=order&t={{$where.t}}&s=-1&type={{$where.type}}">全部</a></li>
 					    <li><a href="/?m=order&t={{$where.t}}&s=1&type={{$where.type}}">已付款</a></li>
 					    <li><a href="/?m=order&t={{$where.t}}&s=0&type={{$where.type}}">未付款</a></li>
 					    <li><a href="/?m=order&t={{$where.t}}&s=2&type={{$where.type}}">取消(未退款)</a></li>

@@ -1,6 +1,6 @@
 <?php
 class Controller{
-    const PAGE_SIZE = 5;
+    const PAGE_SIZE = 10;
     public $tpl = null;
     public function __construct(){
         Interceptor::init();
