@@ -15,7 +15,7 @@ class Controller{
         $this->toJson(array('code'=>$code,'msg'=>$msg));
     }
     public function location($url,$param = array()){
-        $url .= (strpos($url, '?') === false ? '?': '&') .http_build_query($param);
+        $url .= empty($param) ? '' : ((strpos($url, '?') === false ? '?': '&') .http_build_query($param));
         header('location:'.$url);
         die();
     }
