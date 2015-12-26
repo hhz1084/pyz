@@ -38,7 +38,7 @@ class Banner extends Controller
     {
         if ($this->isPost()){
             $url = $_POST['url'];
-            if (empty(is_uploaded_file($_FILES['file']['tmp_name']))){
+            if (is_uploaded_file($_FILES['file']['tmp_name'])){
                 $path = $this->saveFile($_FILES['file']);
             }else{
                 $this->back('图片文件不能为空');
@@ -89,10 +89,10 @@ class Banner extends Controller
     {
         if ($this->isPost()){
             $id = $_POST['id'];
-            $sql = "select * from ha_banner where id={$id}";
+            $sql = "select * from ha_carousel where id={$id}";
             $data = App::db()->getRow($sql);
             $image = ltrim($data['image'],'/');
-            $sql = "delete from ha_banner where id={$id}";
+            $sql = "delete from ha_carousel where id={$id}";
             if (App::db()->query($sql)){
                 if (is_file(APP_PATH.$image)){
                     unlink(APP_PATH.$image);
@@ -100,20 +100,6 @@ class Banner extends Controller
                 $this->json(200);
             }else{
                 $this->json(500,'删除失败');
-            }
-        }
-    }
-    public function actionOp()
-    {
-        if ($this->isPost()){
-            $id = $_POST['id'];
-            $key = $_POST['key'];
-            $val = $_POST['value'];
-            $sql = "UPDATE ha_banner SET {$key}='{$val}' WHERE id={$id}";
-            if (App::db()->query($sql)){
-                $this->json(200);
-            }else{
-                $this->json(500,'服务器错误');
             }
         }
     }
