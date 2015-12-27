@@ -69,8 +69,10 @@ class ValidateCode {
     public static function checkCode($code)
     {
         if (!empty($_SESSION['validateCode']) && strtolower($code) == $_SESSION['validateCode']){
+            $_SESSION['validateCode'] = '';
             return true;
         }
+        $_SESSION['validateCode'] = '';
         return false;
     }
 }

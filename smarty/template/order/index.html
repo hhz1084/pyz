@@ -124,12 +124,10 @@
 							{{$i.createdate}}
 							</td>
 							<td>
-								{{if $i['paystatus'] != 2}}
-								<input type="button" class="btn btn-info cancel1" data-id="{{$i.orderid}}" value="取消(未退款)"/>
-								{{/if}}
-								{{if $i['paystatus'] != 3}}
-								<input type="button" class="btn btn-info cancel2" data-id="{{$i.orderid}}" value="取消(已退款)"/>
-								{{/if}}
+								<input type="button" class="btn btn-info cancel1" data-id="{{$i.orderid}}" value="取消订单"/>
+								
+								<!-- <input type="button" class="btn btn-info cancel2" data-id="{{$i.orderid}}" value="取消(已退款)"/> -->
+								
 								<input type="button" class="btn btn-danger delete" data-id="{{$i.orderid}}" value="删除" />
 							</td>
 						</tr>

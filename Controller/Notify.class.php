@@ -88,8 +88,9 @@ class Notify extends Controller
             $data = App::db()->getRow($sql);
             $title = $data['title'];
             $content = $data['content'];
-            if ($this->sendApi($title, $content)){
-                $sql = "UPDATE ha_systemnotify SET sendtime=now(),sendflag=1 WHERE id={$id}";
+            $time = date('Y-m-d H:i:s');
+            if ($this->sendApi($title, $content,$time)){
+                $sql = "UPDATE ha_systemnotify SET sendtime='$time',sendflag=1 WHERE id={$id}";
                 if (App::db()->query($sql)){
                     $this->json(200);
                 }else{
@@ -100,9 +101,15 @@ class Notify extends Controller
             }
         }
     }
-    private function sendApi($title,$content)
+    private function sendApi($title,$content,$sendTime)
     {
         //推送接口
-        return true;
+        $userId = $_SESSION['user']['userid'];
+        $data = Api::publishsystemnotify($userId, $title, $content, $sendTime);
+        if ($data['code'] == 200){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

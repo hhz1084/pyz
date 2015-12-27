@@ -6,6 +6,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'h8');
 define('IMAGE_PATH', '/img/banner/');
+define('API_URL', 'http://221.179.173.107/');
 $path = array(
     APP_PATH.'class/',
     APP_PATH.'Controller/',

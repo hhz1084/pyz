@@ -49,14 +49,25 @@ class Order extends Controller
     public function actionOp()
     {
         if ($this->isPost()){
-            $id = $_POST['id'];
-            $val = $_POST['value'];
-            $sql = "UPDATE ha_order SET paystatus='{$val}' WHERE orderid={$id}";
-            if (App::db()->query($sql)){
+            $id = intval($_POST['id']);
+            $sql = "select o.orderid,od.userid from ha_order o left join ha_orderdetail od ON o.orderid=od.orderid where o.orderid={$id}";
+            $data = App::db()->getRow($sql);
+            if (empty($data)){
+                $this->json(405,'参数错误');
+            }
+            $ret = Api::cancelbook($data['userid'], $data['orderid']);
+            if ($ret['code'] == 200){
                 $this->json(200);
             }else{
                 $this->json(500,'服务器错误');
             }
+//             $val = $_POST['value'];
+//             $sql = "UPDATE ha_order SET paystatus='{$val}' WHERE orderid={$id}";
+//             if (App::db()->query($sql)){
+//                 $this->json(200);
+//             }else{
+//                 $this->json(500,'服务器错误');
+//             }
         }
     }
     public function actionDelete()

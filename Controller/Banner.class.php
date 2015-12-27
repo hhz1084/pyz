@@ -62,7 +62,7 @@ class Banner extends Controller
             $url = $_POST['url'];
             if (is_uploaded_file($_FILES['file']['tmp_name'])){
                 $path = $this->saveFile($_FILES['file']);
-                @unlink(IMAGE_PATH.ltrim($data['path']));
+                @unlink(rtrim(IMAGE_PATH,'/').'/'.ltrim($data['path']));
             }
             $sql = "update ha_carousel set path='$path',url='$url' where id=$id";
             if (App::db()->query($sql)){
@@ -74,13 +74,13 @@ class Banner extends Controller
     }
     public function saveFile($file)
     {
-        $path = APP_PATH.ltrim(IMAGE_PATH,'/');
+        $path = APP_PATH.trim(IMAGE_PATH,'/');
         if (is_uploaded_file($file['tmp_name'])){
             $filename = uniqid(chr(mt_rand(65, 90)).'_');
             $type = explode('.', $file['name']);
             $type = array_pop($type);
-            if(move_uploaded_file($file['tmp_name'], $path.$filename.'.'.$type)){
-                return IMAGE_PATH.$filename.'.'.$type;
+            if(move_uploaded_file($file['tmp_name'], $path.'/'.$filename.'.'.$type)){
+                return '/'.trim(IMAGE_PATH,'/').'/'.$filename.'.'.$type;
             }
         }
         return false;
