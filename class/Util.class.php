@@ -6,7 +6,7 @@ class Util{
         ob_clean();
         header('Content-Type:application/json; charset=utf-8');
         header(HTTP::getState($state));
-        echo json_encode($data,JSON_UNESCAPED_UNICODE);
+        echo json_encode($data);
         die();
     }
     private static function getHttpState($code){
